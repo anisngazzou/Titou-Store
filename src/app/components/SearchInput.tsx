@@ -3,7 +3,7 @@ import { IoSearchSharp } from "react-icons/io5";
 
 const SearchInput = ({ placeholder, className = '', ...props }: any) => {
   return (
-    <div className="relative w-8/12 ">
+    <div className="relative w-8/12  ">
       <input
         type="text"
         placeholder={placeholder}

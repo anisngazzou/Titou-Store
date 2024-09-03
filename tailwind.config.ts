@@ -5,8 +5,16 @@ export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      fontSize: {
+        '6xl': '3.5rem', // Custom size for text-6xl (48px)
+      },
       fontFamily: {
         primary: ['Inter', ...defaultTheme.fontFamily.sans],
+       
+          sans: ['PointSoft', 'sans-serif'],
+          light: ['PointSoftExtra', 'sans-serif'],
+          bold: ['PointSoftBold', 'sans-serif'],
+    
       },
       borderRadius: {
         'custom': '48px 48px 0px 0px ',
