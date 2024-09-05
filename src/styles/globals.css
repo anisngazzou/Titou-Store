@@ -100,7 +100,7 @@
   background-color:#F4EEE1;
 }
 .imageBg{
-  background-image:url('https://yuno.ch/_next/image?url=%2Fimages%2Ffebruary-campaign-desktop.webp&w=1920&q=75');
+  background-image:url('/images/download.jpg');
  
   object-fit : cover;
   /* height: 100%; */
