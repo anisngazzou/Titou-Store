@@ -7,9 +7,15 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  images: {
+    domains: ['www.titou.ma'], // Add your image domain here
+  },
   reactStrictMode: true,
   swcMinify: true,
-
+  i18n: {
+    locales: ['en', 'fr', 'de'], // List of supported languages
+    defaultLocale: 'en', // Default language
+  },
   // Uncoment to add domain whitelist
   // images: {
   //   domains: [

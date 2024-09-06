@@ -1,7 +1,9 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
-import ColorPicker from '@/app/components/ColorSelector';
+import Link from 'next/link';
+import { useState } from 'react';
 
+import ColorPicker from '@/app/components/ColorSelector';
+import { FaArrowRight } from 'react-icons/fa6';
 type Product = {
   name: string;
   description: string;
@@ -31,8 +33,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
+ 
     <motion.div
-      className="max-w-xs p-4 bg-white rounded-lg shadow-md"
+      className="max-w-xs p-4 bg-white rounded-[32px] relative shadow-md hover:shadow-custom"
       whileHover={{ scale: 1.05 }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -44,13 +47,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         handleNextImage={handleNextImage}
       />
         <ColorPicker productColors={product.colors} selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
-      <div className="mt-4">
+      <div className="mt-4 w-full">
         <h2 className="text-lg font-bold">{product.name}</h2>
-        <p className="text-sm text-gray-600">{'lorem ipsuem doloren foo ba lorem doloran ipsum.'}</p>
-        <p className="text-lg font-semibold mt-2">${199.99}</p>
+        <p className="text-sm text-gray-600">lorem ipsuem doloren foo ba lorem doloran ipsum.</p>
+       <div className='flex justify-between items-center '>
+       <p className="text-lg font-semibold mt-2">${199.99}</p>
+      
+       </div>
       
       </div>
+      <Link href={`/products/${product.id}`}>
+      <div className='absolute flex items-center justify-center bg-[#FFD500] rounded-l-[24px] rounded-b-[32px] bottom-0 right-0 min-w-[75px] border h-[60px]  '>
+      <div className=" rounded-full  p-2 hover:bg-white  cursor-pointer   ">
+                <FaArrowRight size={24} className='' />
+              </div>
+      </div>
+      </Link>
+   
     </motion.div>
+ 
   );
 };
 
@@ -66,7 +81,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
   handleNextImage,
 }) => {
   return (
-    <div className="relative w-full h-64 overflow-hidden rounded-lg">
+    <div className="relative w-full h-64 overflow-hidden rounded-t-[24px] ">
       <img
         src={images[currentImageIndex]}
         alt="Product"

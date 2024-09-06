@@ -5,6 +5,9 @@ export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      boxShadow: {
+        custom: '0px 0px 10px 0px rgba(0, 0, 0, 0.2)',
+      },
       fontSize: {
         '6xl': '3.5rem', // Custom size for text-6xl (48px)
       },

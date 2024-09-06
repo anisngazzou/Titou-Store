@@ -1,102 +1,40 @@
+import Counter from '@/app/components/Counter';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
-interface Product {
-  id: string;
-  name: string;
-  subtitle: string;
-  price: number;
-  currency: string;
-  rating: number;
-  reviews: number;
-  colors: { name: string; hex: string }[];
-  storage: string[];
-  leaseDurations: number[];
-  defaultLeaseDuration: number;
-  images: { [key: string]: string[] };
-  features: string[];
-  additionalInfo: {
-    care: string;
-    paymentNote: string;
-  };
-}
+
 
 // ColorSelector Component
 const ColorSelector: React.FC<{
-  colors: { name: string; hex: string }[];
-  selectedColor: string;
-  onColorChange: (color: string) => void;
-}> = ({ colors, selectedColor, onColorChange }) => (
-  <div className="mt-4">
-    <h3 className="text-sm font-medium text-gray-900">Color</h3>
-    <div className="flex space-x-3 mt-2">
-      {colors.map((color) => (
-        <button
-          key={color.name}
-          className={`w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-            selectedColor === color.name ? 'ring-2 ring-indigo-500' : ''
-          }`}
-          style={{ backgroundColor: color.hex }}
-          onClick={() => onColorChange(color.name)}
-          aria-label={color.name}
-        />
-      ))}
+  colors: any[];
+  selectedColor: any;
+  onColorChange: (color: any) => void;
+}> = ({ colors, selectedColor, onColorChange }) => {
+  console.log("🚀 ~ selectedColor:", selectedColor)
+  console.log("🚀 ~ colors:", colors)
+  
+  return (
+    <div className="mt-4">
+      <h3 className="text-sm font-medium text-gray-900">Color</h3>
+      <div className="flex space-x-3 mt-2">
+        {colors.map((color) => (
+          <button
+            key={color.color}
+            className={`w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+              selectedColor.color === color.color ? 'ring-2 ring-indigo-500' : ''
+            }`}
+            style={{ backgroundColor: color.code }}
+            onClick={() => onColorChange(color)}
+            aria-label={color.color}
+          />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  )
+};
 
-// StorageSelector Component
-const StorageSelector: React.FC<{
-  options: string[];
-  selectedStorage: string;
-  onStorageChange: (storage: string) => void;
-}> = ({ options, selectedStorage, onStorageChange }) => (
-  <div className="mt-4">
-    <h3 className="text-sm font-medium text-gray-900">Storage</h3>
-    <div className="grid grid-cols-3 gap-2 mt-2">
-      {options.map((option) => (
-        <button
-          key={option}
-          className={`px-3 py-2 text-sm font-medium rounded-md ${
-            selectedStorage === option
-              ? 'bg-indigo-600 text-white'
-              : 'bg-gray-200 text-gray-900'
-          }`}
-          onClick={() => onStorageChange(option)}
-        >
-          {option}
-        </button>
-      ))}
-    </div>
-  </div>
-);
 
-// LeaseSelector Component
-const LeaseSelector: React.FC<{
-  durations: number[];
-  selectedDuration: number;
-  onDurationChange: (duration: number) => void;
-}> = ({ durations, selectedDuration, onDurationChange }) => (
-  <div className="mt-4">
-    <h3 className="text-sm font-medium text-gray-900">Lease Duration</h3>
-    <div className="grid grid-cols-3 gap-2 mt-2">
-      {durations.map((duration) => (
-        <button
-          key={duration}
-          className={`px-3 py-2 text-sm font-medium rounded-md ${
-            selectedDuration === duration
-              ? 'bg-indigo-600 text-white'
-              : 'bg-gray-200 text-gray-900'
-          }`}
-          onClick={() => onDurationChange(duration)}
-        >
-          {duration} {duration === 1 ? 'month' : 'months'}
-        </button>
-      ))}
-    </div>
-  </div>
-);
 
 // ProductImage Component
 const ProductImage: React.FC<{
@@ -110,12 +48,11 @@ const ProductImage: React.FC<{
     console.log('com')
     setIsLoading(false);
   };
-  // useEffect(() => {
-  //   const timer = setTimeout(() => setIsLoading(false), 1500);
-  //   return () => clearTimeout(timer);
-  // }, []);
+useEffect(()=>{
+  setCurrentImageIndex(0)
+},[color])
   return (
-    <div className="relative w-full">
+    <div className="relative w-full ">
       <div className="w-full overflow-hidden rounded-3xl bg-white">
         {isLoading && (
           <div className="w-full h-96 bg-gray-200 animate-pulse" />
@@ -157,11 +94,10 @@ const ProductImage: React.FC<{
   );
 };
 
-// Main ProductPage Component
-const ProductPage: React.FC<{ product: Product }> = ({ product }) => {
-  const [selectedColor, setSelectedColor] = useState(product.colors[0].name);
-  const [selectedStorage, setSelectedStorage] = useState(product.storage[0]);
-  const [leaseDuration, setLeaseDuration] = useState(product.defaultLeaseDuration);
+
+const ProductPage: React.FC<{ product: any }> = ({ product }) => {
+  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  console.log("🚀 ~ selectedColor:", selectedColor)
   const [isLoading, setIsLoading] = useState(true);
 
 
@@ -174,11 +110,11 @@ const ProductPage: React.FC<{ product: Product }> = ({ product }) => {
       <nav className="text-sm mb-4">
         <ol className="list-none p-0 inline-flex">
           <li className="flex items-center">
-            <a href="#" className="text-gray-400">Tous les produits</a>
+            <a href="#" className="text-gray-400">Boutique</a>
             <svg className="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
           </li>
           <li className="flex items-center">
-            <a href="#" className="text-gray-400">Smartphones</a>
+            <a href="#" className="text-gray-400">Set de 3</a>
             <svg className="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
           </li>
           <li>
@@ -195,8 +131,8 @@ const ProductPage: React.FC<{ product: Product }> = ({ product }) => {
       >
         <div className="md:w-1/2">
           <ProductImage 
-            images={product.images[selectedColor]} 
-            color={selectedColor} 
+            images={selectedColor.images} 
+            color={selectedColor.color} 
           />
         </div>
         
@@ -212,9 +148,9 @@ const ProductPage: React.FC<{ product: Product }> = ({ product }) => {
 
           {!isLoading && (
             <>
+            
               <h1 className="text-2xl font-bold">{product.name}</h1>
-              <p className="text-gray-600">{product.subtitle}</p>
-              <div className="flex items-center mt-2">
+              <div className="flex items-center mt-0.5">
                 {[...Array(5)].map((_, i) => (
                   <svg
                     key={i}
@@ -230,31 +166,25 @@ const ProductPage: React.FC<{ product: Product }> = ({ product }) => {
                 <span className="ml-2 text-gray-600">{product.rating} / 5</span>
                 <span className="ml-2 text-gray-500">({product.reviews} reviews)</span>
               </div>
+              <p className="text-gray-600 mt-2">{product.subtitle}</p>
+     
               
-              <p className="text-3xl font-bold mt-4">{product.price} {product.currency} / month</p>
-              <p className="text-sm text-gray-500">{product.additionalInfo.paymentNote}</p>
+              <p className="text-3xl font-bold mt-4">{product.price} {product.currency} </p>
+              <p className="text-sm text-gray-500">{product.additionalInfo.care}</p>
               
               <ColorSelector 
                 colors={product.colors} 
                 selectedColor={selectedColor} 
                 onColorChange={setSelectedColor} 
               />
-              
-              <StorageSelector 
-                options={product.storage} 
-                selectedStorage={selectedStorage} 
-                onStorageChange={setSelectedStorage} 
-              />
+                 <Counter />
+     
 
-              {/* <LeaseDurationSelector 
-                duration={leaseDuration} 
-                onDurationChange={setLeaseDuration} 
-                product={product}
-              /> */}
-
-              <button className="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded mt-4">
+              <div className='flex items-center w-full justify-center mt-8'>
+              <button className="w-1/2 bg-[#FFD500] text-black font-bold text-xl hover:bg-black hover:text-white  py-2 px-4 rounded-3xl mt-4">
                 Ajouter au panier
               </button>
+              </div>
             </>
           )}
         </div>

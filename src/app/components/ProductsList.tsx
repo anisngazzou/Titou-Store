@@ -5,6 +5,9 @@ import { ChevronDown, Filter } from 'lucide-react';
 import React, { useEffect,useState } from 'react';
 
 import ProductCard from '@/app/components/PrxTry';
+import CardAd from '@/app/components/AdsCard';
+import ColorPicker from '@/app/components/ColorSelector';
+import ColorPicker2 from '@/app/components/ExpandedColorSelector';
 
 interface Product {
   id: string;
@@ -28,7 +31,7 @@ interface FilterSection {
 
 
 
-const FilterSection: React.FC<{ section: FilterSection }> = ({ section }) => {
+const FilterSection: React.FC<{ section: FilterSection, availbleColors:any[]}> = ({ section,availbleColors }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
@@ -52,45 +55,84 @@ const FilterSection: React.FC<{ section: FilterSection }> = ({ section }) => {
         transition={{ duration: 0.3 }}
         className="overflow-hidden"
       >
-        {section.options.map((option) => (
-          <motion.li 
-            key={option.id} 
-            className="flex items-center mb-2"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <input type="checkbox" id={option.id} className="mr-2" />
-            <label htmlFor={option.id} className="flex-grow text-sm">
-              {option.label}
-            </label>
-            <span className="text-sm text-gray-500">({option.count})</span>
-          </motion.li>
-        ))}
+        <ColorPicker2   productColors={ availbleColors}/>
       </motion.ul>
+
     </motion.div>
   );
 };
 
 const SkeletonCard: React.FC = () => (
-  <motion.div 
-    className="bg-white rounded-lg shadow-md overflow-hidden"
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.5 }}
-  >
-    <div className="h-48 bg-gray-300 animate-pulse" />
-    <div className="p-4">
-      <div className="h-4 bg-gray-300 rounded w-3/4 mb-2 animate-pulse" />
-      <div className="h-4 bg-gray-300 rounded w-1/2 mb-2 animate-pulse" />
-      <div className="h-6 bg-gray-300 rounded w-1/4 mt-2 animate-pulse" />
-    </div>
-  </motion.div>
+  <motion.div
+  className="max-w-xs p-4 bg-white rounded-lg shadow-md"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.5 }}
+>
+  {/* Image Skeleton */}
+  <div className="w-full h-64 bg-gray-200 animate-pulse rounded-lg"></div>
+  <div className="mt-4 flex space-x-2">
+    <div className="w-4 h-4 bg-gray-200 rounded-full animate-pulse"></div>
+    <div className="w-4 h-4 bg-gray-200 rounded-full animate-pulse"></div>
+    <div className="w-4 h-4 bg-gray-200 rounded-full animate-pulse"></div>
+    <div className="w-4 h-4 bg-gray-200 rounded-full animate-pulse"></div>
+  </div>
+  {/* Product Name Skeleton */}
+  <div className="mt-4 space-y-2">
+    <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+    <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+  </div>
+
+  {/* Price Skeleton */}
+  <div className="mt-4">
+    <div className="h-4 bg-gray-200 rounded w-1/4 animate-pulse"></div>
+  </div>
+
+  {/* Color Picker Skeleton */}
+  
+</motion.div>
 );
+function hexToRgb(hex:string) {
+  const bigint = parseInt(hex.slice(1), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return { r, g, b };
+}
+function getUniqueColorCodes(categories:any[]) {
+  const colorCodes = new Set();
+
+  categories.forEach(category => {
+    category.colors.forEach((colorObj:any) => {
+      colorCodes.add({code:colorObj.code});
+    });
+  });
+
+  return Array.from(colorCodes);
+}
+function getOrderedColorsByRgb(categories:any[]) {
+  const colorCodes = new Set();
+
+  // Extract unique color codes
+  categories.forEach(category => {
+    category.colors.forEach((colorObj:any) => {
+      colorCodes.add({code:colorObj.code});
+    });
+  });
+
+  // Convert hex colors to RGB and sort by red, green, blue values
+  return Array.from(colorCodes).sort((a:any, b:any) => {
+    const rgbA = hexToRgb(a.code);
+    const rgbB = hexToRgb(b.code);
+
+    // Sort by red first, then green, then blue
+    return rgbA.r - rgbB.r || rgbA.g - rgbB.g || rgbA.b - rgbB.b;
+  });
+}
 
 const ProductListing: React.FC<{ products: any[], filters: FilterSection[] }> = ({ products, filters }) => {
   const [isLoading, setIsLoading] = useState(true);
-
+const availbleColors = getOrderedColorsByRgb(products)
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
     return () => clearTimeout(timer);
@@ -109,23 +151,23 @@ const ProductListing: React.FC<{ products: any[], filters: FilterSection[] }> = 
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
       >
-        Liste des produits
+       
       </motion.h1>
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col lg:flex-row ">
         <motion.aside 
           className="w-full lg:w-1/4 mb-8 lg:mb-0 lg:mr-8"
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="font-semibold mb-4">Durée de location</h2>
+          <div className=" p-4 rounded-lg ">
+            <h2 className="font-semibold mb-4">Filtres</h2>
             <div className="flex flex-wrap gap-2 mb-4">
-              {['1 mois', '3 mois', '6 mois', '12 mois', '24 mois'].map((duration, index) => (
+              {['Shine', 'Shine +', 'Multi-Color', ].map((duration, index) => (
                 <motion.button
                   key={duration}
                   className={`px-3 py-1 rounded-full text-sm ${
-                    duration === '12 mois' ? 'bg-black text-white' : 'bg-gray-200 text-gray-700'
+                    duration === 'Shine' ? 'bg-black text-white font-semibold' : 'bg-white text-black font-semibold'
                   }`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -138,27 +180,15 @@ const ProductListing: React.FC<{ products: any[], filters: FilterSection[] }> = 
               ))}
             </div>
             {filters.map((section, index) => (
-              <FilterSection key={index} section={section} />
+              <FilterSection key={index} section={section} availbleColors={availbleColors} />
             ))}
           </div>
         </motion.aside>
+        
         <main className="w-full lg:w-3/4">
+          
           <motion.div 
-            className="flex justify-between items-center mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            <p className="text-sm text-gray-600">{products.length} produits</p>
-            <div className="flex items-center">
-              <Filter size={16} className="mr-2" />
-              <select className="border rounded p-2 text-sm">
-                <option>Trier par</option>
-              </select>
-            </div>
-          </motion.div>
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
@@ -167,7 +197,15 @@ const ProductListing: React.FC<{ products: any[], filters: FilterSection[] }> = 
               ? Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)
               : products.map((product,i) => <ProductCard key={i} product={product} />)
             }
+             
           </motion.div>
+          <CardAd
+      backgroundUrl="https://titou.ma/wp-content/uploads/2024/01/ee.png?id=9668"
+      title="Nouvelle Collection Luxe"
+      description="Explorez des pièces exclusives pour un style raffiné."
+      ctaText="Découvrir maintenant"
+      ctaLink="#"
+    />
         </main>
       </div>
     </motion.div>

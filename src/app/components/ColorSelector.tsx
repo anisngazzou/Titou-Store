@@ -84,83 +84,85 @@ const ColorPicker = ({ selectedColor, setSelectedColor, productColors }: any) =>
       ))}
 
     
-<div className='relative'>
-{!showAllColors ? (
-          <motion.button
-            className="w-4 h-4  rounded-full bg-white flex items-center justify-center "
-            onClick={() => setShowAllColors(true)}
-            variants={buttonVariants}
-            whileHover="hover"
-            whileTap="tap"
-          >
-            <motion.div 
-              className="flex flex-row flex-row-reverse gap-1 rounded-full border items-center justify-center w-5 h-5 p-0.5 "
-              variants={dotsContainerVariants}
+{
+  productColors.length >3 && <div className='relative'>
+  {!showAllColors ? (
+            <motion.button
+              className="w-4 h-4  rounded-full bg-white flex items-center justify-center "
+              onClick={() => setShowAllColors(true)}
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="tap"
             >
-              {[0, 1, 2].map((index) => (
-                <motion.div
-                  key={index}
-                  className="w-[0.13rem] h-[0.13rem] bg-black rounded-full"
-                  variants={dotVariants}
+              <motion.div 
+                className="flex flex-row flex-row-reverse gap-1 rounded-full border items-center justify-center w-5 h-5 p-0.5 "
+                variants={dotsContainerVariants}
+              >
+                {[0, 1, 2].map((index) => (
+                  <motion.div
+                    key={index}
+                    className="w-[0.13rem] h-[0.13rem] bg-black rounded-full"
+                    variants={dotVariants}
+                  />
+                ))}
+              </motion.div>
+            </motion.button>
+          ):(
+            <motion.button
+              className="w-4 h-4  rounded-full bg-white flex items-center justify-center "
+              onClick={() => setShowAllColors(false)}
+              variants={buttonVariantsClose}
+              whileHover="hover"
+              whileTap="tap"
+            >
+              <motion.div 
+                className="flex flex-row flex-row-reverse gap-1 rounded-full border items-center justify-center w-5 h-5 p-0.5  "
+                variants={dotsContainerVariants}
+              >
+  
+                {[0, 1, ].map((index) => (
+                  <motion.div
+                    key={index}
+                    className="w-[0.13rem] h-[0.13rem] bg-black rounded-full"
+                    variants={dotVariantsClose}
+                  />
+                ))}
+                <div
+                    
+                    className="w-[0.13rem] h-[0.13rem] bg-black rounded-full"
+                    
+                  />
+              </motion.div>
+            </motion.button>
+          )}
+  
+        {/* Absolute positioned dropdown for additional colors */}
+        <AnimatePresence>
+          {showAllColors && (
+            <motion.div
+              className="absolute -right-1 top-4 flex flex-col gap-2 bg-white p-2 rounded-lg shadow-lg"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={containerVariants}
+            >
+              {productColors.slice(4).map((color: any) => (
+                <motion.button
+                  key={color.code}
+                  className="w-4 h-4 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  style={{ backgroundColor: color.code }}
+                  variants={colorVariants}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSelectedColor(color)}
                 />
               ))}
             </motion.div>
-          </motion.button>
-        ):(
-          <motion.button
-            className="w-4 h-4  rounded-full bg-white flex items-center justify-center "
-            onClick={() => setShowAllColors(false)}
-            variants={buttonVariantsClose}
-            whileHover="hover"
-            whileTap="tap"
-          >
-            <motion.div 
-              className="flex flex-row flex-row-reverse gap-1 rounded-full border items-center justify-center w-5 h-5 p-0.5  "
-              variants={dotsContainerVariants}
-            >
-
-              {[0, 1, ].map((index) => (
-                <motion.div
-                  key={index}
-                  className="w-[0.13rem] h-[0.13rem] bg-black rounded-full"
-                  variants={dotVariantsClose}
-                />
-              ))}
-              <div
-                  
-                  className="w-[0.13rem] h-[0.13rem] bg-black rounded-full"
-                  
-                />
-            </motion.div>
-          </motion.button>
-        )}
-
-      {/* Absolute positioned dropdown for additional colors */}
-      <AnimatePresence>
-        {showAllColors && (
-          <motion.div
-            className="absolute -right-1 top-4 flex flex-col gap-2 bg-white p-2 rounded-lg shadow-lg"
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={containerVariants}
-          >
-            {productColors.slice(4).map((color: any) => (
-              <motion.button
-                key={color.code}
-                className="w-4 h-4 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2"
-                style={{ backgroundColor: color.code }}
-                variants={colorVariants}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedColor(color)}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-</div>
+          )}
+        </AnimatePresence>
+  
+  </div>
+}
     </div>
   );
 };
